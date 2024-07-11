@@ -1,0 +1,53 @@
+﻿@page
+@model RankingModel
+
+<h2>Player Rankings</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Country</th>
+            <th>PP</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var player in Model.Players)
+        {
+        
+            <tr>
+                <td>@player.Rank</td>
+                <td><a asp-page="/Player" asp-route-id="@player.Id">@player.Name</a></td>
+                <td>@player.Country</td>
+                <td>@player.Pp</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Player ranking navigation">
+    <ul class="pagination">
+        @{
+            int firstPageToShow = Model.CurrentPage - 5;
+            int lastPageToShow = Model.CurrentPage + 4;
+            if (firstPageToShow < 1)
+            {
+                firstPageToShow = 1;
+                lastPageToShow = 10;
+            }
+            if (lastPageToShow > Model.TotalPages)
+            {
+                lastPageToShow = Model.TotalPages;
+                firstPageToShow = Model.TotalPages - 9 > 1 ? Model.TotalPages - 9 : 1;
+            }
+
+            for (int i = firstPageToShow; i <= lastPageToShow; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-page="./Ranking" asp-route-currentPage="@i">@i</a>
+                </li>
+            }
+        }
+    </ul>
+</nav>

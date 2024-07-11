@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "portaBLe", "portaBLe.csproj", "{CBEAA17F-3E81-4898-A796-E8E0E71BB94D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CBEAA17F-3E81-4898-A796-E8E0E71BB94D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBEAA17F-3E81-4898-A796-E8E0E71BB94D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBEAA17F-3E81-4898-A796-E8E0E71BB94D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBEAA17F-3E81-4898-A796-E8E0E71BB94D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9008B2B1-1065-4605-AFAF-7E75B26341FC}
+	EndGlobalSection
+EndGlobal

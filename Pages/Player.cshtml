@@ -1,0 +1,54 @@
+﻿@page "/player/{id}"
+@model PlayerModel
+
+<h2>@Model.Player.Name</h2>
+<p>Performance Points: @Model.Player.Pp</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Map</th>
+            <th>Accuracy</th>
+            <th>PP</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var score in Model.Scores)
+        {
+            <tr>
+                <td>@score.Leaderboard.Name - @score.Leaderboard.DifficultyName</td>
+                <td>@score.Accuracy</td>
+                <td>@score.Pp</td>
+                
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Player scores navigation">
+    <ul class="pagination">
+        @{
+            int firstPageToShow = Model.CurrentPage - 5;
+            int lastPageToShow = Model.CurrentPage + 4;
+            if (firstPageToShow < 1)
+            {
+                firstPageToShow = 1;
+                lastPageToShow = 10;
+            }
+            if (lastPageToShow > Model.TotalPages)
+            {
+                lastPageToShow = Model.TotalPages;
+                firstPageToShow = Model.TotalPages - 9 > 1 ? Model.TotalPages - 9 : 1;
+            }
+
+            for (int i = firstPageToShow; i <= lastPageToShow; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-page="./Player" asp-route-id="@Model.Player.Id" asp-route-currentPage="@i">@i</a>
+                </li>
+            }
+        }
+    </ul>
+</nav>
+

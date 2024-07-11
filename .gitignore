@@ -1,0 +1,9 @@
+.idea
+.vscode
+.vs
+bin
+obj
+Properties/PublishProfiles/*
+/azstorage
+.csproj.user
+wwwroot/Database.*
