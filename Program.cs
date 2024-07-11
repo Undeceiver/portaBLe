@@ -181,41 +181,45 @@ namespace portaBLe
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Remove downloading remote DB if you want to recreate it fresh
-            await DownloadDatabaseIfNeeded(builder.Environment.WebRootPath);
+            try {
+                // Remove downloading remote DB if you want to recreate it fresh
+                await DownloadDatabaseIfNeeded(builder.Environment.WebRootPath);
 
-            var connectionString = $"Data Source={builder.Environment.WebRootPath}/Database.db;";
-            builder.Services.AddDbContextFactory<AppContext>(options => options.UseSqlite(connectionString));
-            builder.Services.AddRazorPages();
+                var connectionString = $"Data Source={builder.Environment.WebRootPath}/Database.db;";
+                builder.Services.AddDbContextFactory<AppContext>(options => options.UseSqlite(connectionString));
+                builder.Services.AddRazorPages();
 
-            var app = builder.Build();
+                var app = builder.Build();
 
-            InitializeDatabase(app);
+                InitializeDatabase(app);
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                // Configure the HTTP request pipeline.
+                if (!app.Environment.IsDevelopment())
+                {
+                    app.UseExceptionHandler("/Error");
+                    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                    app.UseHsts();
+                }
+
+                app.UseHttpsRedirection();
+                app.UseStaticFiles();
+
+                app.UseRouting();
+
+                app.UseAuthorization();
+
+                app.MapRazorPages();
+
+                // JSON zip to Database. Takes 5-20 minutes and 8-15GB of RAM
+                //await ImportDump(app);
+
+                // Store your version of DB in S3 for deploy
+                //await UploadDatabaseAsync($"{builder.Environment.WebRootPath}/Database.db");
+
+                await app.RunAsync();
+            } catch (Exception e) {
+                Console.WriteLine(e.Message + "   " + e.StackTrace);
             }
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.MapRazorPages();
-
-            // JSON zip to Database. Takes 5-20 minutes and 8-15GB of RAM
-            //await ImportDump(app);
-
-            // Store your version of DB in S3 for deploy
-            //await UploadDatabaseAsync($"{builder.Environment.WebRootPath}/Database.db");
-
-            await app.RunAsync();
         }
     }
 }
