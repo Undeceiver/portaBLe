@@ -67,6 +67,7 @@ namespace portaBLe
                 c.LeaderboardId,
                 c.Accuracy,
                 c.Modifiers,
+                c.Weight,
             });
             Console.WriteLine($"Saved Leaderboards at {watch.Elapsed}");
             dbContext.ChangeTracker.AutoDetectChangesEnabled = true;

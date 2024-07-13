@@ -44,7 +44,7 @@ namespace portaBLe
             });
 
             Console.WriteLine($"PreBulk Leaderboards at {watch.Elapsed}");
-            dbContext.Leaderboards.BulkInsertOptimized(leaderboards);
+            dbContext.Leaderboards.BulkInsertOptimized(leaderboards, options => options.IncludeGraph = true);
             Console.WriteLine($"Done importing Leaderboards at {watch.Elapsed}");
 
             var players = rootObject.Players.Select(player => new Player
