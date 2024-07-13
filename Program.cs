@@ -5,6 +5,7 @@ using Amazon.S3.Transfer;
 using System.Text.Json;
 using Amazon.S3.Model;
 using Amazon;
+using System.Diagnostics;
 
 namespace portaBLe
 {
@@ -56,19 +57,13 @@ namespace portaBLe
                 var dbContextFactory = services.GetRequiredService<IDbContextFactory<AppContext>>();
                 var env = services.GetRequiredService<IWebHostEnvironment>();
 
-                using (var dbContext = dbContextFactory.CreateDbContext())
-                {
-                    var dump = ParseJson(env.WebRootPath + "/dump.zip");
+                using var dbContext = dbContextFactory.CreateDbContext();
 
-                    DataImporter.ImportJsonData(dump, dbContext);
-                }
-                using (var dbContext = dbContextFactory.CreateDbContext())
-                {
-                    await ScoresRefresh.Refresh(dbContext);
-                }
-                using (var dbContext = dbContextFactory.CreateDbContext()) {
-                    await PlayersRefresh.Refresh(dbContext);
-                }
+                var dump = ParseJson(env.WebRootPath + "/dump.zip");
+
+                DataImporter.ImportJsonData(dump, dbContext);
+                await ScoresRefresh.Refresh(dbContext);
+                await PlayersRefresh.Refresh(dbContext);
             }
         }
 
@@ -183,7 +178,7 @@ namespace portaBLe
 
             try {
                 // Remove downloading remote DB if you want to recreate it fresh
-                await DownloadDatabaseIfNeeded(builder.Environment.WebRootPath);
+                //await DownloadDatabaseIfNeeded(builder.Environment.WebRootPath);
 
                 var connectionString = $"Data Source={builder.Environment.WebRootPath}/Database.db;";
                 builder.Services.AddDbContextFactory<AppContext>(options => options.UseSqlite(connectionString));
@@ -210,8 +205,12 @@ namespace portaBLe
 
                 app.MapRazorPages();
 
+                Console.WriteLine("Importing Dump");
+
+                var watch = Stopwatch.StartNew();
                 // JSON zip to Database. Takes 5-20 minutes and 8-15GB of RAM
-                //await ImportDump(app);
+                await ImportDump(app);
+                Console.WriteLine($"Importing Dump took {watch.Elapsed}");
 
                 // Store your version of DB in S3 for deploy
                 //await UploadDatabaseAsync($"{builder.Environment.WebRootPath}/Database.db");
