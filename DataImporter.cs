@@ -26,8 +26,6 @@ namespace portaBLe
                 }
             }
 
-            Console.WriteLine($"Start Import at {watch.Elapsed}");
-
             var leaderboards = rootObject.Maps.Select(map => new Leaderboard
             {
                 Id = map.Id,
@@ -43,9 +41,7 @@ namespace portaBLe
                 ModifiersRating = map.ModifiersRating
             });
 
-            Console.WriteLine($"PreBulk Leaderboards at {watch.Elapsed}");
             dbContext.Leaderboards.BulkInsertOptimized(leaderboards, options => options.IncludeGraph = true);
-            Console.WriteLine($"Done importing Leaderboards at {watch.Elapsed}");
 
             var players = rootObject.Players.Select(player => new Player
             {
@@ -55,9 +51,7 @@ namespace portaBLe
                 Avatar = player.Avatar,
             });
             
-            Console.WriteLine($"PreBulk Players at {watch.Elapsed}");
             dbContext.Players.BulkInsertOptimized(players);
-            Console.WriteLine($"Done importing Players at {watch.Elapsed}");
 
             var scores = rootObject.Scores.Select(score => new Score
             {
@@ -68,9 +62,7 @@ namespace portaBLe
                 Modifiers = score.Modifiers
             });
             
-            Console.WriteLine($"PreBulk Scores at {watch.Elapsed}");
             dbContext.Scores.BulkInsertOptimized(scores);
-            Console.WriteLine($"Done importing Scores at {watch.Elapsed}");
         }
     }
 }

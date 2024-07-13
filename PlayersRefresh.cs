@@ -50,15 +50,11 @@ namespace portaBLe
         public static async Task Refresh(AppContext dbContext) {
             dbContext.ChangeTracker.AutoDetectChangesEnabled = false;
             
-            Console.WriteLine("Starting PlayerRefresh ...");
-            Stopwatch watch = Stopwatch.StartNew();
             var weights = new Dictionary<int, float>();
             for (int i = 0; i < 10000; i++)
             {
                 weights[i] = MathF.Pow(0.965f, i);
             }
-
-            Console.WriteLine($"Calculated Weights after {watch.Elapsed}");
 
             var scores = dbContext
                 .Scores
@@ -76,10 +72,8 @@ namespace portaBLe
                 })
                 .GroupBy(s => s.PlayerId)
                 .ToAsyncEnumerable();
-            Console.WriteLine($"Downloaded Scores after {watch.Elapsed}");
 
             (List<Score> scoreUpdates, List<Player> playerUpdates) = await CalculateBatch(dbContext, scores, weights);
-            Console.WriteLine($"Calculated Batches after {watch.Elapsed}");
 
             Dictionary<string, int> countries = new();
             foreach ((int i, Player p) in playerUpdates.OrderByDescending(p => p.Pp).Select((value, i) => (i, value)))
@@ -95,7 +89,6 @@ namespace portaBLe
                     countries[p.Country] = ++value;
                 }
             }
-            Console.WriteLine($"Refreshed Countryrank after {watch.Elapsed}");
             await dbContext.BulkUpdateAsync(scoreUpdates, options => options.IgnoreOnUpdateExpression = c => new
             {
                 c.Pp,
@@ -115,7 +108,6 @@ namespace portaBLe
                 c.Country,
                 c.Avatar
             });
-            Console.WriteLine($"Saved Changes after {watch.Elapsed}");
         }
     }
 

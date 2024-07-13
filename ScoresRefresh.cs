@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Dasync.Collections;
-using System.Diagnostics;
-using static System.Formats.Asn1.AsnWriter;
+﻿using Dasync.Collections;
 
 namespace portaBLe
 {
@@ -11,8 +8,6 @@ namespace portaBLe
         {
             dbContext.ChangeTracker.AutoDetectChangesEnabled = false;
 
-            Console.WriteLine("Starting ScoreRefresh ...");
-            Stopwatch watch = Stopwatch.StartNew();
             var allLeaderboards = dbContext.Leaderboards
                 .Select(lb => new {
                     lb.AccRating,
@@ -21,9 +16,9 @@ namespace portaBLe
                     lb.ModifiersRating,
                     Scores = lb.Scores.Select(s => new {s.Id, s.LeaderboardId, s.Accuracy, s.Modifiers })
                 }).ToAsyncEnumerable();
-            Console.WriteLine($"Downlaoded Leaderboards at {watch.Elapsed}");
-            var newTotalScores = new List<Score>();
-            var newScores = new List<Score>();
+
+            List<Score> newTotalScores = new();
+            List<Score> newScores = new();
             await foreach (var leaderboard in allLeaderboards)
             {
                 foreach (var s in leaderboard.Scores)
@@ -59,7 +54,6 @@ namespace portaBLe
                 newTotalScores.AddRange(newScores);
                 newScores.Clear();
             };
-            Console.WriteLine($"Processed Leaderboards at {watch.Elapsed}");
 
             await dbContext.BulkUpdateAsync(newTotalScores, options => options.IgnoreOnUpdateExpression = c => new
             {
@@ -69,7 +63,6 @@ namespace portaBLe
                 c.Modifiers,
                 c.Weight,
             });
-            Console.WriteLine($"Saved Leaderboards at {watch.Elapsed}");
             dbContext.ChangeTracker.AutoDetectChangesEnabled = true;
         }
     }
