@@ -12,7 +12,6 @@ namespace portaBLe
     {
         public static void ImportJsonData(RootObject rootObject, AppContext dbContext)
         {
-            Stopwatch watch = Stopwatch.StartNew();
             dbContext.ChangeTracker.AutoDetectChangesEnabled = false;
             
             // Disable WAL
