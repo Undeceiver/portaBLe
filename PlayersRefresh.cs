@@ -1,19 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dasync.Collections;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace portaBLe
 {
     public class PlayersRefresh
     {
-        private static async Task CalculateBatch(AppContext dbContext, List<IGrouping<string, ScoreSelection>> groups, Dictionary<int, float> weights)
+        private static async Task<(List<Score>, List<Player>)> CalculateBatch(AppContext dbContext, IAsyncEnumerable<IGrouping<string, ScoreSelection>> groups, Dictionary<int, float> weights)
         {
             dbContext.ChangeTracker.AutoDetectChangesEnabled = false;
-            foreach (var group in groups)
+            var scoreUpdates = new List<Score>();
+            var playerUpdates = new List<Player>();
+            await foreach (var group in groups)
             {
                 try {
-                    Player player = new Player { Id = group.Key };
-                    try {
-                        dbContext.Players.Attach(player);
-                    } catch { }
+                    Player player = new() { Id = group.Key };
+                    playerUpdates.Add(player);
+
 
                     float resultPP = 0f;
                     float accPP = 0f;
@@ -25,11 +28,7 @@ namespace portaBLe
                         float weight = weights[i];
                         if (s.Weight != weight)
                         {
-                            var score = new Score() { Id = s.Id, Weight = weight };
-                            try {
-                                dbContext.Scores.Attach(score);
-                            } catch { }
-                            dbContext.Entry(score).Property(x => x.Weight).IsModified = true;
+                            scoreUpdates.Add(new() { Id = s.Id, Weight = weight });
                         }
                         resultPP += s.Pp * weight;
                         accPP += s.AccPP * weight;
@@ -41,28 +40,23 @@ namespace portaBLe
                     player.AccPp = accPP;
                     player.TechPp = techPP;
                     player.PassPp = passPP;
-
-                    dbContext.Entry(player).Property(x => x.Pp).IsModified = true;
-                    dbContext.Entry(player).Property(x => x.AccPp).IsModified = true;
-                    dbContext.Entry(player).Property(x => x.TechPp).IsModified = true;
-                    dbContext.Entry(player).Property(x => x.PassPp).IsModified = true;
-                } catch (Exception e) {
+                } catch (Exception) {
                 }
             }
-                
-            await dbContext.BulkSaveChangesAsync();
+
+            return (scoreUpdates, playerUpdates);
         }
 
         public static async Task Refresh(AppContext dbContext) {
             dbContext.ChangeTracker.AutoDetectChangesEnabled = false;
-
+            
             var weights = new Dictionary<int, float>();
             for (int i = 0; i < 10000; i++)
             {
                 weights[i] = MathF.Pow(0.965f, i);
             }
 
-            var scores = await dbContext
+            var scores = dbContext
                 .Scores
                 .Select(s => new ScoreSelection { 
                     Id = s.Id, 
@@ -76,35 +70,44 @@ namespace portaBLe
                     PlayerId = s.PlayerId, 
                     Country = s.Player.Country 
                 })
-                .ToListAsync();
+                .GroupBy(s => s.PlayerId)
+                .ToAsyncEnumerable();
 
-            var scoreGroups = scores.GroupBy(s => s.PlayerId).ToList();
-            for (int i = 0; i < scoreGroups.Count; i += 5000)
-            {
-                await CalculateBatch(dbContext, scoreGroups.Skip(i).Take(5000).ToList(), weights);
-            }
+            (List<Score> scoreUpdates, List<Player> playerUpdates) = await CalculateBatch(dbContext, scores, weights);
 
-            Dictionary<string, int> countries = new Dictionary<string, int>();
-            var ranked = await dbContext
-                .Players
-                .OrderByDescending(p => p.Pp)
-                .ToListAsync();
-            foreach ((int i, Player p) in ranked.Select((value, i) => (i, value)))
+            Dictionary<string, int> countries = new();
+            foreach ((int i, Player p) in playerUpdates.OrderByDescending(p => p.Pp).Select((value, i) => (i, value)))
             {
                 p.Rank = i + 1;
-                dbContext.Entry(p).Property(x => x.Rank).IsModified = true;
                 if (p.Country != null) {
-                    if (!countries.ContainsKey(p.Country))
+                    if (!countries.TryGetValue(p.Country, out int value))
                     {
-                        countries[p.Country] = 1;
+                        countries[p.Country] = value = 1;
                     }
 
-                    p.CountryRank = countries[p.Country];
-                    dbContext.Entry(p).Property(x => x.CountryRank).IsModified = true;
-                    countries[p.Country]++;
+                    p.CountryRank = value;
+                    countries[p.Country] = ++value;
                 }
             }
-            await dbContext.BulkSaveChangesAsync();
+            await dbContext.BulkUpdateAsync(scoreUpdates, options => options.IgnoreOnUpdateExpression = c => new
+            {
+                c.Pp,
+                c.AccPP,
+                c.TechPP,
+                c.PassPP,
+                c.BonusPp,
+                c.PlayerId,
+                c.Rank,
+                c.LeaderboardId,
+                c.Accuracy,
+                c.Modifiers
+            });
+            await dbContext.BulkUpdateAsync(playerUpdates, options => options.IgnoreOnUpdateExpression = c => new
+            {
+                c.Name,
+                c.Country,
+                c.Avatar
+            });
         }
     }
 

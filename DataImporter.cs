@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.Concurrent;
+using System.Diagnostics;
+using Z.EntityFramework.Extensions;
 
 namespace portaBLe
 {
@@ -11,6 +13,10 @@ namespace portaBLe
         public static void ImportJsonData(RootObject rootObject, AppContext dbContext)
         {
             dbContext.ChangeTracker.AutoDetectChangesEnabled = false;
+            
+            // Disable WAL
+            dbContext.Database.ExecuteSql($"PRAGMA journal_mode=OFF;");
+            dbContext.Database.ExecuteSql($"PRAGMA synchronous=OFF;");
 
             foreach (var item in rootObject.Maps)
             {
@@ -32,10 +38,9 @@ namespace portaBLe
                 TechRating = map.TechRating,
                 PredictedAcc = map.PredictedAcc,
                 ModifiersRating = map.ModifiersRating
-            }).ToList();
+            });
 
-            dbContext.Leaderboards.AddRange(leaderboards);
-            dbContext.BulkSaveChanges();
+            dbContext.Leaderboards.BulkInsertOptimized(leaderboards, options => options.IncludeGraph = true);
 
             var players = rootObject.Players.Select(player => new Player
             {
@@ -43,10 +48,9 @@ namespace portaBLe
                 Name = player.Name,
                 Country = player.Country,
                 Avatar = player.Avatar,
-            }).ToList();
-
-            dbContext.Players.AddRange(players);
-            dbContext.BulkSaveChanges();
+            });
+            
+            dbContext.Players.BulkInsertOptimized(players);
 
             var scores = rootObject.Scores.Select(score => new Score
             {
@@ -55,11 +59,9 @@ namespace portaBLe
                 LeaderboardId = score.LeaderboardId,
                 Accuracy = score.Accuracy,
                 Modifiers = score.Modifiers
-            }).ToList();
-
-            dbContext.Scores.AddRange(scores);
-
-            dbContext.BulkSaveChanges();
+            });
+            
+            dbContext.Scores.BulkInsertOptimized(scores);
         }
     }
 }

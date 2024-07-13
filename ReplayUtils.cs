@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Reflection;
 
 namespace portaBLe
 {
@@ -211,16 +212,21 @@ namespace portaBLe
           return note_score * (41 + (count - 13) * 8);
         }
 
+        private static readonly PropertyInfo[] aModifiers = typeof(ModifiersMap).GetProperties().Where(p => p.PropertyType == typeof(float) && p.Name.Length == 2).ToArray();
+
         public static float GetTotalMultiplier(this ModifiersMap modifiersObject, string modifiers, bool speedModifiers)
 		{
 			float multiplier = 1;
 
-            var modifiersMap = modifiersObject.ToDictionary<float>();
-            foreach (var modifier in modifiersMap.Keys)
+            foreach (PropertyInfo modifierProp in aModifiers)
             {
-                if (!speedModifiers && (modifier == "SF" || modifier == "SS" || modifier == "FS")) continue;
+                if (!speedModifiers && modifierProp.Name is "SF" or "SS" or "FS")
+                    continue;
 
-                if (modifiers.Contains(modifier)) { multiplier += modifiersMap[modifier]; }
+                if (modifiers.Contains(modifierProp.Name, StringComparison.Ordinal))
+                {
+                    multiplier += (float)modifierProp.GetValue(modifiersObject)!;
+                }
             }
             
 
