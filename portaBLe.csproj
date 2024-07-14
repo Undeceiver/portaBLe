@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="beatleader-analyzer\**" />
+    <Compile Remove="beatleader-parser\**" />
+    <Content Remove="beatleader-analyzer\**" />
+    <Content Remove="beatleader-parser\**" />
+    <EmbeddedResource Remove="beatleader-analyzer\**" />
+    <EmbeddedResource Remove="beatleader-parser\**" />
+    <None Remove="beatleader-analyzer\**" />
+    <None Remove="beatleader-parser\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AsyncEnumerator" Version="4.0.2" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.310.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.20">
