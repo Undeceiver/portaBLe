@@ -180,6 +180,9 @@ namespace portaBLe
                 // Remove downloading remote DB if you want to recreate it fresh
                 await DownloadDatabaseIfNeeded(builder.Environment.WebRootPath);
 
+                // Store your version of DB in S3 for deploy
+                //await UploadDatabaseAsync($"{builder.Environment.WebRootPath}/Database.db");
+
                 var connectionString = $"Data Source={builder.Environment.WebRootPath}/Database.db;";
                 builder.Services.AddDbContextFactory<AppContext>(options => options.UseSqlite(connectionString));
                 builder.Services.AddRazorPages();
@@ -207,9 +210,6 @@ namespace portaBLe
 
                 // JSON zip to Database. Takes 5-20 minutes and 8-15GB of RAM
                 //await ImportDump(app);
-
-                // Store your version of DB in S3 for deploy
-                //await UploadDatabaseAsync($"{builder.Environment.WebRootPath}/Database.db");
 
                 await app.RunAsync();
             } catch (Exception e) {
