@@ -11,7 +11,7 @@ using portaBLe;
 namespace portaBLe.Migrations
 {
     [DbContext(typeof(AppContext))]
-    [Migration("20250114225828_Init")]
+    [Migration("20250615213957_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -30,6 +30,12 @@ namespace portaBLe.Migrations
                         .HasColumnType("REAL");
 
                     b.Property<float>("Average")
+                        .HasColumnType("REAL");
+
+                    b.Property<float>("BetaAlpha")
+                        .HasColumnType("REAL");
+
+                    b.Property<float>("BetaBeta")
                         .HasColumnType("REAL");
 
                     b.Property<int>("Count")
@@ -51,6 +57,9 @@ namespace portaBLe.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("TEXT");
 
+                    b.Property<float>("GoldStandard")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("Hash")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -59,6 +68,9 @@ namespace portaBLe.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
+
+                    b.Property<float>("MaxScoreMult")
+                        .HasColumnType("REAL");
 
                     b.Property<float>("Megametric")
                         .HasColumnType("REAL");
@@ -219,6 +231,9 @@ namespace portaBLe.Migrations
                     b.Property<int>("RankedPlayCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<float>("Skill")
+                        .HasColumnType("REAL");
+
                     b.Property<float>("TechPp")
                         .HasColumnType("REAL");
 
@@ -273,6 +288,9 @@ namespace portaBLe.Migrations
 
                     b.Property<int>("Rank")
                         .HasColumnType("INTEGER");
+
+                    b.Property<float>("Skill")
+                        .HasColumnType("REAL");
 
                     b.Property<float>("TechPP")
                         .HasColumnType("REAL");

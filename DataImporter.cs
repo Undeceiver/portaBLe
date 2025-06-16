@@ -36,6 +36,10 @@ namespace portaBLe
                 PassRating = map.PassRating,
                 AccRating = map.AccRating,
                 TechRating = map.TechRating,
+                BetaAlpha = map.BetaAlpha,
+                BetaBeta = map.BetaBeta,
+                MaxScoreMult = map.MaxScoreMult,
+                GoldStandard = map.Gold_Standard,
                 PredictedAcc = map.PredictedAcc,
                 ModifiersRating = map.ModifiersRating,
                 Cover = map.CoverImage,
@@ -51,6 +55,7 @@ namespace portaBLe
                 Name = player.Name,
                 Country = player.Country,
                 Avatar = player.Avatar,
+                Skill = player.Skill,
             });
             
             dbContext.Players.BulkInsertOptimized(players);
@@ -64,7 +69,8 @@ namespace portaBLe
                 Accuracy = score.Accuracy,
                 Modifiers = score.Modifiers,
                 FC = score.FC,
-                FCAcc = score.FCAcc
+                FCAcc = score.FCAcc,
+                Skill = score.Skill,
             });
             
             dbContext.Scores.BulkInsertOptimized(scores);

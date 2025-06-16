@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
+using MathNet.Numerics.Distributions;
 
 namespace portaBLe
 {
@@ -197,6 +198,22 @@ namespace portaBLe
             }
 
             return (fullPP, fullPP - rawPP, passPP * increase, accPP * increase, techPP * increase);
+        }
+
+        public static float PpFromScoreBeta(float accuracy, string modifiers, float betaAlpha, float betaBeta, float maxScoreMult)
+        {
+            if (modifiers != "")
+            {
+                return 0;
+            }
+
+            float waccuracy = accuracy / maxScoreMult;
+
+            double skill = Beta.CDF(betaAlpha, betaBeta, waccuracy);
+
+            double PP = -Math.Log(1 - skill);
+
+            return (float)PP;
         }
 
         public static int MaxScoreForNote(int count) {

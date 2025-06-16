@@ -3,7 +3,7 @@
 
 <img class="player-avatar" src="@Model.Player.Avatar" />
 <h2>@Model.Player.Name</h2>
-<p>#@Model.Player.Rank - @Model.Player.Pp pp</p>
+<p>#@Model.Player.Rank - @Model.Player.Pp pp / @Model.Player.Skill estimated skill</p>
 
 <table class="table">
     <thead>
@@ -12,6 +12,7 @@
             <th>PP</th>
             <th>Accuracy</th>
             <th>Mods</th>
+            <th>Skill</th>
             
         </tr>
     </thead>
@@ -23,7 +24,7 @@
                 <td>@score.Pp</td>
                 <td>@score.Accuracy</td>
                 <td>@score.Modifiers</td>
-                
+                <td>@score.Skill</td>
             </tr>
         }
     </tbody>

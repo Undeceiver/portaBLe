@@ -62,7 +62,28 @@ namespace portaBLe
                 var dump = ParseJson(env.WebRootPath + "/dump.zip");
 
                 DataImporter.ImportJsonData(dump, dbContext);
-                await ScoresRefresh.Refresh(dbContext);
+                //await ScoresRefresh.Refresh(dbContext);
+                await ScoresRefresh.RefreshBeta(dbContext);
+                await PlayersRefresh.Refresh(dbContext);
+                await LeaderboardsRefresh.Refresh(dbContext);
+            }
+        }
+
+        public static async Task RecalculateScores(IHost host)
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var dbContextFactory = services.GetRequiredService<IDbContextFactory<AppContext>>();
+                var env = services.GetRequiredService<IWebHostEnvironment>();
+
+                using var dbContext = dbContextFactory.CreateDbContext();
+
+                //var dump = ParseJson(env.WebRootPath + "/dump.zip");
+
+                //DataImporter.ImportJsonData(dump, dbContext);
+                //await ScoresRefresh.Refresh(dbContext);
+                await ScoresRefresh.RefreshBeta(dbContext);
                 await PlayersRefresh.Refresh(dbContext);
                 await LeaderboardsRefresh.Refresh(dbContext);
             }
@@ -179,7 +200,7 @@ namespace portaBLe
 
             try {
                 // Remove downloading remote DB if you want to recreate it fresh
-                await DownloadDatabaseIfNeeded(builder.Environment.WebRootPath);
+                //await DownloadDatabaseIfNeeded(builder.Environment.WebRootPath);
 
                 // Store your version of DB in S3 for deploy
                 //await UploadDatabaseAsync($"{builder.Environment.WebRootPath}/Database.db");
@@ -210,7 +231,9 @@ namespace portaBLe
                 app.MapRazorPages();
 
                 // JSON zip to Database. Takes 5-20 minutes and 8-15GB of RAM
-                //await ImportDump(app);
+                await ImportDump(app);
+
+                //await RecalculateScores(app);
 
                 await app.RunAsync();
             } catch (Exception e) {

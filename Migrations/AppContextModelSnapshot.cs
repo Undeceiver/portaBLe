@@ -29,6 +29,12 @@ namespace portaBLe.Migrations
                     b.Property<float>("Average")
                         .HasColumnType("REAL");
 
+                    b.Property<float>("BetaAlpha")
+                        .HasColumnType("REAL");
+
+                    b.Property<float>("BetaBeta")
+                        .HasColumnType("REAL");
+
                     b.Property<int>("Count")
                         .HasColumnType("INTEGER");
 
@@ -48,6 +54,9 @@ namespace portaBLe.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("TEXT");
 
+                    b.Property<float>("GoldStandard")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("Hash")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -56,6 +65,9 @@ namespace portaBLe.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
+
+                    b.Property<float>("MaxScoreMult")
+                        .HasColumnType("REAL");
 
                     b.Property<float>("Megametric")
                         .HasColumnType("REAL");
@@ -216,6 +228,9 @@ namespace portaBLe.Migrations
                     b.Property<int>("RankedPlayCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<float>("Skill")
+                        .HasColumnType("REAL");
+
                     b.Property<float>("TechPp")
                         .HasColumnType("REAL");
 
@@ -270,6 +285,9 @@ namespace portaBLe.Migrations
 
                     b.Property<int>("Rank")
                         .HasColumnType("INTEGER");
+
+                    b.Property<float>("Skill")
+                        .HasColumnType("REAL");
 
                     b.Property<float>("TechPP")
                         .HasColumnType("REAL");

@@ -52,7 +52,8 @@ namespace portaBLe.Migrations
                     CountryRank = table.Column<int>(type: "INTEGER", nullable: false),
                     Avatar = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     TopPp = table.Column<float>(type: "REAL", nullable: false),
-                    RankedPlayCount = table.Column<int>(type: "INTEGER", nullable: false)
+                    RankedPlayCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    Skill = table.Column<float>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,6 +76,10 @@ namespace portaBLe.Migrations
                     PassRating = table.Column<float>(type: "REAL", nullable: false),
                     AccRating = table.Column<float>(type: "REAL", nullable: false),
                     TechRating = table.Column<float>(type: "REAL", nullable: false),
+                    BetaAlpha = table.Column<float>(type: "REAL", nullable: false),
+                    BetaBeta = table.Column<float>(type: "REAL", nullable: false),
+                    MaxScoreMult = table.Column<float>(type: "REAL", nullable: false),
+                    GoldStandard = table.Column<float>(type: "REAL", nullable: false),
                     PredictedAcc = table.Column<float>(type: "REAL", nullable: false),
                     ModifiersRatingId = table.Column<int>(type: "INTEGER", nullable: true),
                     Count = table.Column<int>(type: "INTEGER", nullable: false),
@@ -120,7 +125,8 @@ namespace portaBLe.Migrations
                     Accuracy = table.Column<float>(type: "REAL", nullable: false),
                     Modifiers = table.Column<string>(type: "TEXT", nullable: false),
                     FC = table.Column<bool>(type: "INTEGER", nullable: false),
-                    FCAcc = table.Column<float>(type: "REAL", nullable: false)
+                    FCAcc = table.Column<float>(type: "REAL", nullable: false),
+                    Skill = table.Column<float>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
