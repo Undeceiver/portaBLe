@@ -202,16 +202,18 @@ namespace portaBLe
 
         public static float PpFromScoreBeta(float accuracy, string modifiers, float betaAlpha, float betaBeta, float maxScoreMult)
         {
+            float factor = 95;
+
             if (modifiers != "")
             {
                 return 0;
             }
 
-            float waccuracy = accuracy / maxScoreMult;
+            float waccuracy = accuracy * maxScoreMult;
 
             double skill = Beta.CDF(betaAlpha, betaBeta, waccuracy);
 
-            double PP = -Math.Log(1 - skill);
+            double PP = -Math.Log(1 - skill) * factor;
 
             return (float)PP;
         }

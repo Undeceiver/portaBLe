@@ -231,7 +231,7 @@ namespace portaBLe
                 app.MapRazorPages();
 
                 // JSON zip to Database. Takes 5-20 minutes and 8-15GB of RAM
-                await ImportDump(app);
+                //await ImportDump(app);
 
                 //await RecalculateScores(app);
 
