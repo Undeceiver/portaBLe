@@ -88,6 +88,7 @@ namespace portaBLe.Migrations
                     Average = table.Column<float>(type: "REAL", nullable: false),
                     Top250 = table.Column<float>(type: "REAL", nullable: false),
                     TotalPP = table.Column<float>(type: "REAL", nullable: false),
+                    TopPp = table.Column<float>(type: "REAL", nullable: false),
                     PPRatioFiltered = table.Column<float>(type: "REAL", nullable: false),
                     PPRatioUnfiltered = table.Column<float>(type: "REAL", nullable: false),
                     Percentile = table.Column<float>(type: "REAL", nullable: false),

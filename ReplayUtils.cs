@@ -202,7 +202,7 @@ namespace portaBLe
 
         public static float PpFromScoreBeta(float accuracy, string modifiers, float betaAlpha, float betaBeta, float maxScoreMult)
         {
-            float factor = 95;
+            float factor = 93;
 
             if (modifiers != "")
             {

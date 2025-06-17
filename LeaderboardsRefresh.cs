@@ -36,6 +36,7 @@ namespace portaBLe
                     PPAverage2 = g.Where(s => s.TopPp != 0).Average(s => s.Pp / s.TopPp),
                     Count = g.Count(),
                     Top250 = g.Where(s => s.Rank < 250 && s.Weight > weightTreshold).Count(),
+                    TopPp = g.Max(s => s.Pp),
                     Id = g.Key,
                 })
             .ToList();
@@ -70,6 +71,7 @@ namespace portaBLe
                     Megametric125 = mm2,
                     Megametric75 = mm3,
                     Megametric40 = mm4,
+                    TopPp = item.TopPp,
                     Top250 = item.Top250,
                     TotalPP = item.PPsum,
                     PPRatioFiltered = item.PPAverage,
@@ -90,7 +92,8 @@ namespace portaBLe
                     c.Megametric,
                     c.Megametric40,
                     c.Megametric75,
-                    c.Megametric125
+                    c.Megametric125,
+                    c.TopPp,
                 });
         }
     }

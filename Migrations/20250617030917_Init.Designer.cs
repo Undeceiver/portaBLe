@@ -11,7 +11,7 @@ using portaBLe;
 namespace portaBLe.Migrations
 {
     [DbContext(typeof(AppContext))]
-    [Migration("20250615213957_Init")]
+    [Migration("20250617030917_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -124,6 +124,9 @@ namespace portaBLe.Migrations
                         .HasColumnType("REAL");
 
                     b.Property<float>("Top250")
+                        .HasColumnType("REAL");
+
+                    b.Property<float>("TopPp")
                         .HasColumnType("REAL");
 
                     b.Property<float>("TotalPP")

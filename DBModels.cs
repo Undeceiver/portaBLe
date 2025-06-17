@@ -108,6 +108,7 @@ namespace portaBLe
         public float Average { get; set; }
         public float Top250 { get; set; }
         public float TotalPP { get; set; }
+        public float TopPp { get; set; }
         public float PPRatioFiltered { get; set; }
         public float PPRatioUnfiltered { get; set; }
         public float Percentile { get; set; }

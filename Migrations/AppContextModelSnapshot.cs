@@ -123,6 +123,9 @@ namespace portaBLe.Migrations
                     b.Property<float>("Top250")
                         .HasColumnType("REAL");
 
+                    b.Property<float>("TopPp")
+                        .HasColumnType("REAL");
+
                     b.Property<float>("TotalPP")
                         .HasColumnType("REAL");
 

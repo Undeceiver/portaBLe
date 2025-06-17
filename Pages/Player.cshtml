@@ -10,7 +10,8 @@
         <tr>
             <th>Map</th>
             <th>PP</th>
-            <th>PP/Top PP</th>
+            <th>PP/Player's Top PP</th>
+            <th>PP/Map's Top PP</th>
             <th>Accuracy</th>
             <th>Mods</th>
             <th>Skill</th>
@@ -24,6 +25,7 @@
                 <td><a asp-page="/Leaderboard" asp-route-id="@score.Leaderboard.Id">@score.Leaderboard.Name - @score.Leaderboard.DifficultyName</a></td>
                 <td>@score.Pp</td>
                 <td>@(score.Pp/Model.Player.TopPp)</td>
+                <td>@(score.Pp/score.Leaderboard.TopPp)</td>
                 <td>@score.Accuracy</td>
                 <td>@score.Modifiers</td>
                 <td>@score.Skill</td>
