@@ -63,7 +63,7 @@ namespace portaBLe
 
                 DataImporter.ImportJsonData(dump, dbContext);
                 //await ScoresRefresh.Refresh(dbContext);
-                await ScoresRefresh.RefreshBeta(dbContext);
+                await ScoresRefresh.RefreshAbsolutelyMonotonic(dbContext);
                 await PlayersRefresh.Refresh(dbContext);
                 await LeaderboardsRefresh.Refresh(dbContext);
             }
@@ -83,7 +83,7 @@ namespace portaBLe
 
                 //DataImporter.ImportJsonData(dump, dbContext);
                 //await ScoresRefresh.Refresh(dbContext);
-                await ScoresRefresh.RefreshBeta(dbContext);
+                await ScoresRefresh.RefreshAbsolutelyMonotonic(dbContext);
                 await PlayersRefresh.Refresh(dbContext);
                 await LeaderboardsRefresh.Refresh(dbContext);
             }

@@ -59,7 +59,7 @@ namespace portaBLe
             dbContext.ChangeTracker.AutoDetectChangesEnabled = true;
         }
 
-        public static async Task RefreshBeta(AppContext dbContext)
+        public static async Task RefreshAbsolutelyMonotonic(AppContext dbContext)
         {
             dbContext.ChangeTracker.AutoDetectChangesEnabled = false;
 
@@ -68,9 +68,7 @@ namespace portaBLe
                     lb.AccRating,
                     lb.PassRating,
                     lb.TechRating,
-                    lb.BetaAlpha,
-                    lb.BetaBeta,
-                    lb.MaxScoreMult,
+                    lb.Params,
                     lb.ModifiersRating,
                     Scores = lb.Scores.Select(s => new { s.Id, s.LeaderboardId, s.Accuracy, s.Modifiers })
                 }).ToAsyncEnumerable();
@@ -81,12 +79,13 @@ namespace portaBLe
             {
                 foreach (var s in leaderboard.Scores)
                 {
-                    float pp = ReplayUtils.PpFromScoreBeta(
+                    List<float> mapParams = leaderboard.Params.Split(',').Select(s => float.Parse(s)).ToList();
+
+                    float pp = ReplayUtils.PpFromScoreAbsolutelyMonotonic(
                         s.Accuracy,
-                        s.Modifiers,                         
-                        leaderboard.BetaAlpha,
-                        leaderboard.BetaBeta,
-                        leaderboard.MaxScoreMult);
+                        s.Modifiers,
+                        mapParams
+                        );
 
                     if (float.IsNaN(pp))
                     {

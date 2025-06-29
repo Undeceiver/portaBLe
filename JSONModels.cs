@@ -19,7 +19,7 @@
         public string Modifiers { get; set; }
         public bool FC { get; set; }
         public float FCAcc { get; set; }
-        public float Skill { get; set; }
+        
     }
 
     public class JsonLeaderboard
@@ -36,9 +36,7 @@
         public float PassRating { get; set; }
         public float AccRating { get; set; }
         public float TechRating { get; set; }
-        public float BetaAlpha { get; set; }
-        public float BetaBeta { get; set; }
-        public float MaxScoreMult { get; set; }
+        public List<float> Params { get; set; }
         public float Gold_Standard { get; set; }
         public float PredictedAcc { get; set; }
         public ModifiersRating? ModifiersRating { get; set; }

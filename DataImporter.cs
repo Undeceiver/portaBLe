@@ -36,9 +36,7 @@ namespace portaBLe
                 PassRating = map.PassRating,
                 AccRating = map.AccRating,
                 TechRating = map.TechRating,
-                BetaAlpha = map.BetaAlpha,
-                BetaBeta = map.BetaBeta,
-                MaxScoreMult = map.MaxScoreMult,
+                Params = string.Join(",", map.Params),
                 GoldStandard = map.Gold_Standard,
                 PredictedAcc = map.PredictedAcc,
                 ModifiersRating = map.ModifiersRating,
@@ -69,8 +67,7 @@ namespace portaBLe
                 Accuracy = score.Accuracy,
                 Modifiers = score.Modifiers,
                 FC = score.FC,
-                FCAcc = score.FCAcc,
-                Skill = score.Skill,
+                FCAcc = score.FCAcc
             });
             
             dbContext.Scores.BulkInsertOptimized(scores);

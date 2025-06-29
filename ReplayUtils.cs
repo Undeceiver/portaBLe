@@ -218,6 +218,24 @@ namespace portaBLe
             return (float)PP;
         }
 
+        public static float PpFromScoreAbsolutelyMonotonic(float accuracy, string modifiers, List<float> mapParams)
+        {
+            float factor = 700;
+            int n_elements_basis = 5;
+
+            double pp = mapParams[0];
+
+            float cur_exponent = 0;
+
+            for (int i = 0; i < n_elements_basis; i++ )
+            {
+                cur_exponent += mapParams[2*i+1];
+                pp += mapParams[2 * i + 2] * (Math.Exp(cur_exponent * accuracy) - 1) / (Math.Exp(cur_exponent) - 1);                    
+            }
+
+            return (float)pp*factor;
+        }
+
         public static int MaxScoreForNote(int count) {
           int note_score = 115;
 
